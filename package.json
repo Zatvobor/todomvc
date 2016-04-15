@@ -1,0 +1,24 @@
+{
+  "name": "todomvc",
+  "version": "1.0.0-beta",
+  "description": "MaidSAFE • TodoMVC",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zatvobor/todomvc.git"
+  },
+  "author": "Aleksey Zatvobor <a.zatvornitskiy@gmail.com> (http://github.com/zatvobor)",
+  "license": "CC-BY-4.0",
+  "bugs": {
+    "url": "https://github.com/Zatvobor/todomvc/issues"
+  },
+  "homepage": "https://github.com/Zatvobor/todomvc#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^0.37.0"
+  }
+}
