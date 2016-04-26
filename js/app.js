@@ -1,15 +1,16 @@
 'use strict';
 
-import React, { Component } from 'react'
+import React from 'react'
 import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import App from './containers/App'
+import configureStore from './store/configureStore'
 
-class App extends Component {
-  render() {
-    return(<div><h1>React here!!</h1></div>)
-  }
-}
+const store = configureStore()
 
 render(
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )

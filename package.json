@@ -24,11 +24,17 @@
     "electron-prebuilt": "^0.37.0",
     "expect": "^1.18.0",
     "jsdom": "^8.4.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "^15.0.1"
   },
   "dependencies": {
     "electron-compile": "^3.1.0",
+    "todomvc-app-css": "^2.0.1",
     "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "react-redux": "^4.2.1",
+    "redux": "^3.2.1",
+    "classnames": "^2.1.2",
+    "babel-polyfill": "^6.3.14"
   }
 }
