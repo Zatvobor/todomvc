@@ -1,5 +1,7 @@
 # MaidSAFE • [TodoMVC](http://todomvc.com)
 
+[![Build Status](https://travis-ci.org/Zatvobor/todomvc.svg?branch=master)](https://travis-ci.org/Zatvobor/todomvc)
+
 > The New Decentralized Internet
 
 ## Resources
