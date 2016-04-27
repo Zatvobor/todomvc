@@ -29,13 +29,14 @@
     "react-addons-test-utils": "^0.14.7"
   },
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
+    "classnames": "^2.1.2",
     "electron-compile": "^3.1.0",
-    "todomvc-app-css": "^2.0.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-redux": "^4.2.1",
     "redux": "^3.2.1",
-    "classnames": "^2.1.2",
-    "babel-polyfill": "^6.3.14"
+    "redux-thunk": "^2.0.1",
+    "todomvc-app-css": "^2.0.1"
   }
 }
