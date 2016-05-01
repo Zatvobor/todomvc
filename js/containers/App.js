@@ -10,12 +10,20 @@ class App extends Component {
   render() {
     const { todos, authorizations, actions } = this.props
     console.info(authorizations)
-    return (
-      <div>
-        <Header addTodo={actions.addTodo} />
-        <MainSection todos={todos} actions={actions} />
-      </div>
-    )
+    if(authorizations.inFlight) {
+      return(<div>Authorizing...</div>)
+    } else {
+      if(authorizations.isAuthorized) {
+        return(
+          <div>
+            <Header addTodo={actions.addTodo} />
+            <MainSection todos={todos} actions={actions} />
+          </div>
+        )
+      } else {
+        return(<div>Boo...</div>)
+      }
+    }
   }
 }
 

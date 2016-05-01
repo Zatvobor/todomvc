@@ -41,8 +41,7 @@ export function get_auth(token) {
 export function delete_auth(token) {
   const init = {
     method: 'DELETE',
-    headers: {'Authorization':'Bearer ' + token },
-    cache: 'no-store'
+    headers: {'Authorization':'Bearer ' + token }
   }
 
   return fetch('http://localhost:8100/auth', init)
