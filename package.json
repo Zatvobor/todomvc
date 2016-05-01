@@ -26,6 +26,7 @@
     "electron-mocha": "^1.2.2",
     "electron-prebuilt": "^0.37.0",
     "expect": "^1.18.0",
+    "fetch-mock": "^4.4.0",
     "react-addons-test-utils": "^0.14.7"
   },
   "dependencies": {
