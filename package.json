@@ -33,6 +33,7 @@
     "babel-polyfill": "^6.3.14",
     "classnames": "^2.1.2",
     "electron-compile": "^3.1.0",
+    "libsodium-wrappers": "^0.3.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-redux": "^4.2.1",
