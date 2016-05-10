@@ -10,20 +10,20 @@ export function didAuthorized(isAuthorized) {
 import * as http from '../gateway/http'
 
 export function authorizeApp() {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(willAuthorize())
 
     return http.post_auth()
       .then((response) => {
         if(response.status == 200) {
-          response.json().then((json) => dispatch(didAuthorized(json.token)))
+          dispatch(didAuthorized(response.__parsedResponseBody__.token))
         }
         if(response.status == 401) {
           dispatch(didAuthorized(false))
         }
       })
       .catch(() => {
-        dispatch(didAuthorized())
+        dispatch(didAuthorized(undefined))
       })
   }
 }

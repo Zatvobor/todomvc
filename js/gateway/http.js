@@ -28,6 +28,17 @@ export function post_auth() {
   }
 
   return fetch('http://localhost:8100/auth', init)
+    .then((response) => {
+      let parsedResponse
+      if(response.status == 200) {
+        parsedResponse = response.json()
+          .then((json) => {
+            response.__parsedResponseBody__ = json
+            return response
+          })
+      }
+      return (parsedResponse || response)
+    })
 }
 
 export function get_auth(token) {

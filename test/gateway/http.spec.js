@@ -6,18 +6,21 @@ import fetch from 'fetch-mock'
 
 describe('http gateway', () => {
 
+  afterEach(() => { fetch.restore() })
+
   it('#post_auth', (done) => {
     const matcher = function(url, opts) {
       const a = (url === 'http://localhost:8100/auth')
       const body = JSON.parse(opts.body)
       return a && body.app && body.publicKey && body.nonce && body.permissions
     }
-    fetch.mock(matcher, 'POST', 200)
+    const response = { status: 200, body: JSON.stringify({}) }
+
+    fetch.mock(matcher, 'POST', response)
     http.post_auth().then((response) => {
       expect(response.status).toEqual(200)
       done()
     })
-    fetch.restore()
   })
 
   it('#get_auth', (done) => {
@@ -31,7 +34,6 @@ describe('http gateway', () => {
       expect(response.status).toEqual(200)
       done()
     })
-    fetch.restore()
   })
 
   it('#delete_auth', (done) => {
@@ -45,10 +47,9 @@ describe('http gateway', () => {
       expect(response.status).toEqual(200)
       done()
     })
-    fetch.restore()
   })
 
-  describe('app payload', () => {
+  context('app payload', () => {
 
     it('gets payload details from package.json', () => {
       const details = http.app()
