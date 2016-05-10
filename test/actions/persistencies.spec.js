@@ -3,27 +3,26 @@ import expect from 'expect'
 import * as actions from '../../js/actions/persistencies'
 
 describe('persistencies actions', () => {
-
-  describe('in loading context', () => {
-    it('creates `willGet()` action', () => {
+  context('loading', () => {
+    specify('.willGet()', () => {
       expect(actions.willGet()).toEqual({ type: 'getting' })
     })
-    it('creates `didGet([<<objects>>])` action', () => {
+    specify('.didGet([<<objects>>])', () => {
       expect(actions.didGet([1,2])).toEqual({ type: 'got', todos: [1,2], isOk: true })
     })
-    it('creates `didGet(false)` action', () => {
+    specify('.didGet(false)', () => {
       expect(actions.didGet(false)).toEqual({ type: 'got', isFailed: true })
     })
   })
 
-  describe('in storing context', () => {
-    it('creates `willPut()` action', () => {
+  context('storing', () => {
+    specify('.willPut()', () => {
       expect(actions.willPut()).toEqual({ type: 'putting' })
     })
-    it('creates `didPut(true)` action', () => {
+    specify('.didPut(true)', () => {
       expect(actions.didPut(true)).toEqual({ type: 'put', isOk: true })
     })
-    it('creates `didPut(false)` action', () => {
+    specify('.didPut(false)', () => {
       expect(actions.didPut(false)).toEqual({ type: 'put', isFailed: true })
     })
   })

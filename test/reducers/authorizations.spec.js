@@ -7,22 +7,26 @@ describe('authorizations reducer', () => {
   it('starts from the beginning', () => {
     expect(reducer(undefined, {})).toEqual({ inFlight: false, isAuthorized: false })
   })
-  it('reduces a `willAuthorize` action', () => {
+
+  specify('.willAuthorize()', () => {
     expect(
       reducer({ inFlight: false, isAuthorized: false }, actions.willAuthorize())
     ).toEqual({ inFlight: true, isAuthorized: false })
   })
-  it('reduces a successful `didAuthorized` action', () => {
+
+  specify('.didAuthorized(true)', () => {
     expect(
       reducer({ inFlight: true, isAuthorized: false }, actions.didAuthorized(true))
     ).toEqual({ inFlight: false, isAuthorized: true })
   })
-  it('reduces a `didAuthorized` action that was failed', () => {
+
+  specify('.didAuthorized(false)', () => {
     expect(
       reducer({ inFlight: true, isAuthorized: false }, actions.didAuthorized(false))
     ).toEqual({ inFlight: false, isAuthorized: false })
   })
-  it('reduces a `didAuthorized` action in case of pessmission was revoked', () => {
+
+  specify('`.didAuthorized(false)` action in case of pessmission was revoked', () => {
     expect(
       reducer({ inFlight: false, isAuthorized: false }, actions.didAuthorized(false))
     ).toEqual({ inFlight: false, isAuthorized: false })

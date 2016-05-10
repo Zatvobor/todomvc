@@ -3,10 +3,10 @@ import expect from 'expect'
 import * as actions from '../../js/actions/authorizations'
 
 describe('authorizations actions', () => {
-  it('creates `willAuthorize` action', () => {
+  specify('.willAuthorize()', () => {
     expect(actions.willAuthorize()).toEqual({ type: 'authorizing' })
   })
-  it('creates `didAuthorized` action', () => {
+  specify('.didAuthorized(true)', () => {
     expect(actions.didAuthorized(true)).toEqual({ type: 'authorized', isAuthorized: true })
   })
 })

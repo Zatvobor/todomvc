@@ -5,7 +5,6 @@ import fetch from 'fetch-mock'
 
 
 describe('http gateway', () => {
-
   afterEach(() => { fetch.restore() })
 
   it('#post_auth', (done) => {
@@ -50,7 +49,6 @@ describe('http gateway', () => {
   })
 
   context('app payload', () => {
-
     it('gets payload details from package.json', () => {
       const details = http.app()
       expect(details.name).toNotBe(undefined)
