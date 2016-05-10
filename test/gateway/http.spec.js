@@ -3,6 +3,7 @@ import expect from 'expect'
 import * as http from '../../js/gateway/http'
 import fetch from 'fetch-mock'
 
+
 describe('http gateway', () => {
 
   it('#post_auth', (done) => {
@@ -45,5 +46,16 @@ describe('http gateway', () => {
       done()
     })
     fetch.restore()
+  })
+
+  describe('app payload', () => {
+
+    it('gets payload details from package.json', () => {
+      const details = http.app()
+      expect(details.name).toNotBe(undefined)
+      expect(details.version).toNotBe(undefined)
+      expect(details.vendor).toNotBe(undefined)
+      expect(details.id).toNotBe(undefined)
+    })
   })
 })

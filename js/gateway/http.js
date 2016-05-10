@@ -1,18 +1,20 @@
-import * as libsodium from 'libsodium-wrappers'
+import meta from '../../package.json'
 
-const app = {
-  name: 'MaidSAFE • TodoMVC',
-  version: '1.0.0-beta',
-  vendor: 'todomvc',
-  id: 'todomvc'
+export function app() {
+  return {
+    name: meta.description, version: meta.version, vendor: meta.author, id: meta.name
+  }
 }
+
+
+import * as libsodium from 'libsodium-wrappers'
 
 export function post_auth() {
   const assymetricKeys = libsodium.crypto_box_keypair()
   const nonce = libsodium.randombytes_buf(libsodium.crypto_box_NONCEBYTES)
 
   const payload = {
-    app: app,
+    app: app(),
     publicKey: new Buffer(assymetricKeys.publicKey).toString('base64'),
     nonce: new Buffer(nonce).toString('base64'),
     permissions: []
