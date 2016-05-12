@@ -68,15 +68,15 @@ export function asyncGetFile() {
 
       if(response.status == 200) {
         const todos = response.__parsedResponseBody__
-        dispatch(persistencies.didGet(todos))
+        return dispatch(persistencies.didGet(todos))
       }
 
       if(response.status == 400) {
         dispatch(persistencies.didGet(undefined))
-        http.postFile(token, key, nonce)
+        return http.postFile(token, key, nonce)
           .then((response) => {
             if(response.status == 200) {
-              dispatch(asyncPutFile())
+              return dispatch(asyncPutFile()).then(() => dispatch(asyncGetFile()))
             }
           })
       }
@@ -87,14 +87,13 @@ export function asyncGetFile() {
 export function asyncPutFile() {
   return function(dispatch, getState) {
     dispatch(persistencies.willPut())
-
     const { token, key, nonce } = getNetworkCredentials()
     const payload = getState().todos
+
     return http.putFile(token, key, nonce, payload)
       .then((response) => {
         if(response.status == 200) {
-          dispatch(persistencies.willPut(true))
-          dispatch(asyncGetFile())
+          return dispatch(persistencies.willPut(true))
         }
       })
   }

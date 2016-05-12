@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import TodoItem from './TodoItem'
 import Footer from './Footer'
 import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../constants/TodoFilters'
+import * as logic from '../gateway/logic'
 
 const TODO_FILTERS = {
   [SHOW_ALL]: () => true,
@@ -21,6 +22,10 @@ class MainSection extends Component {
 
   handleShow(filter) {
     this.setState({ filter })
+  }
+
+  handleSave() {
+    this.props.actions.saveTodos()
   }
 
   renderToggleAll(completedCount) {
@@ -46,6 +51,7 @@ class MainSection extends Component {
                 activeCount={activeCount}
                 filter={filter}
                 onClearCompleted={this.handleClearCompleted.bind(this)}
+                onSave={this.handleSave.bind(this)}
                 onShow={this.handleShow.bind(this)} />
       )
     }
