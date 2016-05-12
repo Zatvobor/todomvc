@@ -9,7 +9,6 @@ import * as TodoActions from '../actions/todos'
 class App extends Component {
   render() {
     const { todos, authorizations, actions } = this.props
-    console.info(authorizations)
     if(authorizations.inFlight) {
       return(<div>Authorizing...</div>)
     } else {

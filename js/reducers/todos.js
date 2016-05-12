@@ -10,13 +10,15 @@ const initialState = [
 
 export default function todos(state = initialState, action) {
   switch (action.type) {
+    case 'got':
+      return action.isOk ? action.todos : state
     case ADD_TODO:
       return [
         {
           id: state.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1,
           completed: false,
           text: action.text
-        }, 
+        },
         ...state
       ]
 

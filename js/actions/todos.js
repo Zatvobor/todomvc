@@ -1,4 +1,9 @@
 import * as types from '../constants/ActionTypes'
+import * as gatewayLogic from '../gateway/logic'
+
+export function saveTodos() {
+  return gatewayLogic.asyncPutFile()
+}
 
 export function addTodo(text) {
   return { type: types.ADD_TODO, text }

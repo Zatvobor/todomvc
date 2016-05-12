@@ -45,6 +45,13 @@ class Footer extends Component {
     }
   }
 
+  renderSaveButton() {
+    const { onSave } = this.props
+    return(
+      <button className="clear-completed" onClick={onSave}>Save</button>
+    )
+  }
+
   render() {
     return (
       <footer className="footer">
@@ -56,7 +63,7 @@ class Footer extends Component {
             </li>
           )}
         </ul>
-        {this.renderClearButton()}
+        {this.renderSaveButton()}
       </footer>
     )
   }

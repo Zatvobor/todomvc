@@ -19,6 +19,8 @@ development routine. This app promotes things like:
 - [x] compile JS and CSS through `electron-compile`.
 - [x] testing through `electron-mocha`. Tests are running in `renderer` process.
 - [x] Fetch API to interface a `safe_launcher` (first step towards Workers API).
+- [x] application authorizing with confirmation whether the obtained token is still valid.
+- [x] store todo list into safe network.
 
 ### Installation and usage
 

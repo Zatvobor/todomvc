@@ -15,5 +15,6 @@ render(
   document.getElementById('root')
 )
 
-import { authorizeApp } from './actions/authorizations'
-store.dispatch( authorizeApp() )
+import * as logic from './gateway/logic'
+logic.authorizeApplicationOrConfirmObtainedToken(store)
+  .then(() => logic.getTodosFileOrPutInitialFromApplicationState(store) )
