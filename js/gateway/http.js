@@ -9,14 +9,14 @@ export function app() {
 
 import * as libsodium from 'libsodium-wrappers'
 
-export function post_auth() {
+export function postAuth() {
   const assymetricKeys = libsodium.crypto_box_keypair()
-  const nonce = libsodium.randombytes_buf(libsodium.crypto_box_NONCEBYTES)
+  const assymetricNonce = libsodium.randombytes_buf(libsodium.crypto_box_NONCEBYTES)
 
   const payload = {
     app: app(),
     publicKey: new Buffer(assymetricKeys.publicKey).toString('base64'),
-    nonce: new Buffer(nonce).toString('base64'),
+    nonce: new Buffer(assymetricNonce).toString('base64'),
     permissions: []
   }
 
@@ -36,26 +36,100 @@ export function post_auth() {
             response.__parsedResponseBody__ = json
             return response
           })
+          .then((response) => {
+            const cipher = new Uint8Array(new Buffer(response.__parsedResponseBody__.encryptedKey, 'base64'))
+            const publicKey = new Uint8Array(new Buffer(response.__parsedResponseBody__.publicKey, 'base64'))
+            const data = libsodium.crypto_box_open_easy(cipher, assymetricNonce, publicKey, assymetricKeys.privateKey)
+
+            response.__parsedResponseBody__.symmetricKeys = {
+              key: new Buffer(data.slice(0, libsodium.crypto_secretbox_KEYBYTES)).toString('base64'),
+              nonce: new Buffer(data.slice(libsodium.crypto_secretbox_KEYBYTES)).toString('base64')
+            }
+            return response
+          })
       }
       return (parsedResponse || response)
     })
 }
 
-export function get_auth(token) {
+export function getAuth(token) {
   const init = {
     method: 'GET',
-    headers: {'Authorization':'Bearer ' + token },
+    headers: { 'Authorization':'Bearer ' + token },
     cache: 'no-store'
   }
 
   return fetch('http://localhost:8100/auth', init)
 }
 
-export function delete_auth(token) {
+export function deleteAuth(token) {
   const init = {
     method: 'DELETE',
-    headers: {'Authorization':'Bearer ' + token }
+    headers: { 'Authorization':'Bearer ' + token }
   }
 
   return fetch('http://localhost:8100/auth', init)
+}
+
+export function getFile(token, key, nonce) {
+  const init = {
+    method: 'GET',
+    headers: { 'Authorization':'Bearer ' + token },
+    cache: 'no-store'
+  }
+
+  return fetch(`http://localhost:8100/nfs/file/${encodeURIComponent('/todomvc.json')}/false`, init)
+    .then((response) => {
+      let parsedResponse
+      if(response.status == 200) {
+        parsedResponse = response.text()
+          .then((text) => {
+            const body = new Buffer(text, 'base64')
+            const data = libsodium.crypto_secretbox_open_easy(new Uint8Array(body), nonce, key)
+            const content = new Buffer(data).toString()
+            response.__parsedResponseBody__ = JSON.parse(content)
+            return response
+          })
+      }
+      return (parsedResponse || response)
+    })
+}
+
+export function putFile(token, key, nonce, payload) {
+  const content = JSON.stringify(payload)
+  const data = libsodium.crypto_secretbox_easy(content, nonce, key)
+
+  const init = {
+    method: 'PUT',
+    headers: { 'Authorization':'Bearer ' + token, 'Content-Type':'text/plain' },
+    body: new Buffer(data).toString('base64')
+  }
+
+  return fetch(`http://localhost:8100/nfs/file/${encodeURIComponent('/todomvc.json')}/false`, init)
+}
+
+export function postFile(token, key, nonce) {
+  const payload = {
+    filePath: '/todomvc.json', isPathShared: false
+  }
+
+  const content = JSON.stringify(payload)
+  const data = libsodium.crypto_secretbox_easy(content, nonce, key)
+
+  const init = {
+    method: 'POST',
+    headers: { 'Authorization':'Bearer ' + token, 'Content-Type':'text/plain' },
+    body: new Buffer(data).toString('base64')
+  }
+
+  return fetch('http://localhost:8100/nfs/file', init)
+}
+
+export function deleteFile(token) {
+  const init = {
+    method: 'DELETE',
+    headers: { 'Authorization':'Bearer ' + token }
+  }
+
+  return fetch(`http://localhost:8100/nfs/file/${encodeURIComponent('/todomvc.json')}/false`, init)
 }

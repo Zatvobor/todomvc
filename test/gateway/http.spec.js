@@ -7,45 +7,81 @@ import fetch from 'fetch-mock'
 describe('http gateway', () => {
   afterEach(() => { fetch.restore() })
 
-  it('#post_auth', (done) => {
-    const matcher = function(url, opts) {
-      const a = (url === 'http://localhost:8100/auth')
-      const body = JSON.parse(opts.body)
-      return a && body.app && body.publicKey && body.nonce && body.permissions
-    }
-    const response = { status: 200, body: JSON.stringify({}) }
+  context('authorizations', () => {
+    xit('.postAuth()', (done) => {
+      const matcher = function(url, opts) {
+        const a = (url === 'http://localhost:8100/auth')
+        const body = JSON.parse(opts.body)
+        return (a && body.app && body.publicKey && body.nonce && body.permissions)
+      }
 
-    fetch.mock(matcher, 'POST', response)
-    http.post_auth().then((response) => {
-      expect(response.status).toEqual(200)
-      done()
+      const response = { status: 200, body: JSON.stringify({}) }
+      fetch.mock(matcher, 'POST', response)
+
+      http.postAuth().then((response) => {
+        expect(response.status).toEqual(200)
+        expect(response.__parsedResponseBody__).toEqual({})
+        done()
+      })
+    })
+    it('.getAuth(token)', (done) => {
+      const matcher = function(url, opts) {
+        const a = (url === 'http://localhost:8100/auth')
+        const b = (opts.headers['Authorization'] == 'Bearer token')
+        return (a && b)
+      }
+      fetch.mock(matcher, 'GET', 200)
+      http.getAuth('token').then((response) => {
+        expect(response.status).toEqual(200)
+        done()
+      })
+    })
+    it('.deleteAuth(token)', (done) => {
+      const matcher = function(url, opts) {
+        const a = (url === 'http://localhost:8100/auth')
+        const b = (opts.headers['Authorization'] == 'Bearer token')
+        return (a && b)
+      }
+      fetch.mock(matcher, 'DELETE', 200)
+      http.deleteAuth('token').then((response) => {
+        expect(response.status).toEqual(200)
+        done()
+      })
     })
   })
 
-  it('#get_auth', (done) => {
-    const matcher = function(url, opts) {
-      const a = (url === 'http://localhost:8100/auth')
-      const b = (opts.headers['Authorization'] == 'Bearer token')
-      return a && b
-    }
-    fetch.mock(matcher, 'GET', 200)
-    http.get_auth('token').then((response) => {
-      expect(response.status).toEqual(200)
-      done()
-    })
-  })
+  context('persistence', () => {
+    xit('.getFile(token, key, nonce)', (done) => {
+      const matcher = function(url, opts) {
+        const a = (url === 'http://localhost:8100/nfs/file/todomvc.json')
+        const b = (opts.headers['Authorization'] == 'Bearer token')
+        return (a && b)
+      }
+      const response = { status: 200, body: JSON.stringify({}) }
 
-  it('#delete_auth', (done) => {
-    const matcher = function(url, opts) {
-      const a = (url === 'http://localhost:8100/auth')
-      const b = (opts.headers['Authorization'] == 'Bearer token')
-      return a && b
-    }
-    fetch.mock(matcher, 'DELETE', 200)
-    http.delete_auth('token').then((response) => {
-      expect(response.status).toEqual(200)
-      done()
+      fetch.mock(matcher, 'GET', response)
+      http.getFile('token').then((response) => {
+        expect(response.status).toEqual(200)
+        expect(response.__parsedResponseBody__).toEqual({})
+        done()
+      })
     })
+    xit('.putFile(token, key, nonce, payload)', (done) => {
+      const matcher = function(url, opts) {
+        const a = (url === 'http://localhost:8100/nfs/file/todomvc.json')
+        const b = (opts.headers['Authorization'] == 'Bearer token')
+        const c = (opts.headers['Content-Type']  == 'text/plain')
+        return (a && b && c)
+      }
+
+      fetch.mock(matcher, 'PUT', 200)
+      http.putFile('token', {}).then((response) => {
+        expect(response.status).toEqual(200)
+        done()
+      })
+    })
+    xit('.postFile(token, key, nonce)', (done) => {})
+    xit('.deleteFile(token)', (done) => {})
   })
 
   context('app payload', () => {

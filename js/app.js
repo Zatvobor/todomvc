@@ -17,3 +17,4 @@ render(
 
 import * as logic from './gateway/logic'
 logic.authorizeApplicationOrConfirmObtainedToken(store)
+  .then(() => logic.getTodosFileOrPutInitialFromApplicationState(store) )
