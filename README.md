@@ -28,11 +28,13 @@ You have to go through `npm install`, `npm test` and finally `npm start`. Tada! 
 
 ### Wait, seriously?
 
-Yeah. Make sure you have a `safe_launcher`.
+Yeah. Make sure you have a `safe_launcher` (configured with `use-mock-routing` feature).
 
 ### Support
 
-*Let us [know](https://github.com/zatvobor/todomvc/issues) if you discover anything worth sharing.*
+Let us [know](https://github.com/zatvobor/todomvc/issues) if you discover anything worth sharing.
+
+*Some MAIDs/BTC would be helpful: [1DUr1QLqgaa8erpEk5Ucc8Jqs926Y7mpqh](https://blockchain.info/address/1DUr1QLqgaa8erpEk5Ucc8Jqs926Y7mpqh)*
 
 ## Credits
 
