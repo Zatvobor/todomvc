@@ -24,10 +24,6 @@ class MainSection extends Component {
     this.setState({ filter })
   }
 
-  handleSave() {
-    this.props.actions.saveTodos()
-  }
-
   renderToggleAll(completedCount) {
     const { todos, actions } = this.props
     if (todos.length > 0) {
@@ -51,7 +47,6 @@ class MainSection extends Component {
                 activeCount={activeCount}
                 filter={filter}
                 onClearCompleted={this.handleClearCompleted.bind(this)}
-                onSave={this.handleSave.bind(this)}
                 onShow={this.handleShow.bind(this)} />
       )
     }
