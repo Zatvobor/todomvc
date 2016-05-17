@@ -9,7 +9,24 @@ export function app() {
 
 import * as libsodium from 'libsodium-wrappers'
 
-export function postAuth() {
+
+export function fulfillPostAuth(assymetricKeys, assymetricNonce) {
+  return function(response) {
+    if(response.status == 200) {
+      const cipher = new Uint8Array(new Buffer(response.__parsedResponseBody__.encryptedKey, 'base64'))
+      const publicKey = new Uint8Array(new Buffer(response.__parsedResponseBody__.publicKey, 'base64'))
+      const data = libsodium.crypto_box_open_easy(cipher, assymetricNonce, publicKey, assymetricKeys.privateKey)
+
+      response.__parsedResponseBody__.symmetricKeys = {
+        key: new Buffer(data.slice(0, libsodium.crypto_secretbox_KEYBYTES)).toString('base64'),
+        nonce: new Buffer(data.slice(libsodium.crypto_secretbox_KEYBYTES)).toString('base64')
+      }
+    }
+    return response
+  }
+}
+
+export function postAuth(onFulfilled = fulfillPostAuth) {
   const assymetricKeys = libsodium.crypto_box_keypair()
   const assymetricNonce = libsodium.randombytes_buf(libsodium.crypto_box_NONCEBYTES)
 
@@ -36,20 +53,10 @@ export function postAuth() {
             response.__parsedResponseBody__ = json
             return response
           })
-          .then((response) => {
-            const cipher = new Uint8Array(new Buffer(response.__parsedResponseBody__.encryptedKey, 'base64'))
-            const publicKey = new Uint8Array(new Buffer(response.__parsedResponseBody__.publicKey, 'base64'))
-            const data = libsodium.crypto_box_open_easy(cipher, assymetricNonce, publicKey, assymetricKeys.privateKey)
-
-            response.__parsedResponseBody__.symmetricKeys = {
-              key: new Buffer(data.slice(0, libsodium.crypto_secretbox_KEYBYTES)).toString('base64'),
-              nonce: new Buffer(data.slice(libsodium.crypto_secretbox_KEYBYTES)).toString('base64')
-            }
-            return response
-          })
       }
       return (parsedResponse || response)
     })
+    .then(onFulfilled(assymetricKeys, assymetricNonce))
 }
 
 export function getAuth(token) {
@@ -71,7 +78,24 @@ export function deleteAuth(token) {
   return fetch('http://localhost:8100/auth', init)
 }
 
-export function getFile(token, key, nonce) {
+export function fulfillGetFile(symmetricKey, symmetricNonce) {
+  return function(response) {
+    let parsedResponse
+    if(response.status == 200) {
+      parsedResponse = response.text()
+        .then((text) => {
+          const body = new Buffer(text, 'base64')
+          const data = libsodium.crypto_secretbox_open_easy(new Uint8Array(body), symmetricNonce, symmetricKey)
+          const content = new Buffer(data).toString()
+          response.__parsedResponseBody__ = JSON.parse(content)
+          return response
+        })
+    }
+    return (parsedResponse || response)
+  }
+}
+
+export function getFile(token, key, nonce, onFulfilled = fulfillGetFile) {
   const init = {
     method: 'GET',
     headers: { 'Authorization':'Bearer ' + token },
@@ -79,20 +103,7 @@ export function getFile(token, key, nonce) {
   }
 
   return fetch(`http://localhost:8100/nfs/file/${encodeURIComponent('/todomvc.json')}/false`, init)
-    .then((response) => {
-      let parsedResponse
-      if(response.status == 200) {
-        parsedResponse = response.text()
-          .then((text) => {
-            const body = new Buffer(text, 'base64')
-            const data = libsodium.crypto_secretbox_open_easy(new Uint8Array(body), nonce, key)
-            const content = new Buffer(data).toString()
-            response.__parsedResponseBody__ = JSON.parse(content)
-            return response
-          })
-      }
-      return (parsedResponse || response)
-    })
+    .then(onFulfilled(key, nonce))
 }
 
 export function putFile(token, key, nonce, payload) {
