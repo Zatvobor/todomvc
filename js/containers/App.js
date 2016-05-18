@@ -7,34 +7,46 @@ import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions/todos'
 
 class App extends Component {
-  render() {
-    const { todos, authorizations, actions } = this.props
-    if(authorizations.inFlight) {
-      return(<div>Authorizing...</div>)
+  renderApp() {
+    const { todos, actions } = this.props
+    return(
+      <div className="todoapp">
+        <Header addTodo={actions.addTodo} />
+        <MainSection todos={todos} actions={actions} />
+      </div>
+    )
+  }
+  renderStatus() {
+    const { authorizations, persistencies } = this.props
+    if(authorizations.isAuthorized) {
+      const onSave = (<a onClick={this.props.actions.saveTodos}>Save</a>)
+      const isSaving = (persistencies.inFlight ? 'Saving...' : onSave)
+
+      return(<span className="info">{isSaving}</span>)
     } else {
-      if(authorizations.isAuthorized) {
-        return(
-          <div>
-            <Header addTodo={actions.addTodo} />
-            <MainSection todos={todos} actions={actions} />
-          </div>
-        )
-      } else {
-        return(<div>Boo...</div>)
-      }
+      const onAuthrorize = (<a onClick={this.props.actions.authorizeApp}>Authorize</a>)
+      const isAuthorized = (authorizations.inFlight ? 'Authorizing...' : (authorizations.isAuthorized ? 'Authrorized' : onAuthrorize))
+
+      return(<span className="info">{isAuthorized}</span>)
     }
+  }
+  render() {
+    return(
+      <div> {this.renderApp()} {this.renderStatus()} </div>
+    )
   }
 }
 
 App.propTypes = {
   todos: PropTypes.array.isRequired,
   authorizations: PropTypes.object.isRequired,
+  persistencies: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
   return {
-    todos: state.todos, authorizations: state.authorizations
+    todos: state.todos, authorizations: state.authorizations, persistencies: state.persistencies
   }
 }
 

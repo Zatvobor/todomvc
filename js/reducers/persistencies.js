@@ -1,6 +1,6 @@
 const initialState = { inFlight: false }
 
-export default function authorizations(state = initialState, action) {
+export default function persistencies(state = initialState, action) {
   switch (action.type) {
     case 'putting':
       return { inFlight: true }

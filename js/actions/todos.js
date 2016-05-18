@@ -5,6 +5,14 @@ export function saveTodos() {
   return gatewayLogic.asyncPutFile()
 }
 
+export function loadTodos() {
+  return gatewayLogic.asyncGetFile()
+}
+
+export function authorizeApp() {
+  return gatewayLogic.asyncPostAuthAndGetFile()
+}
+
 export function addTodo(text) {
   return { type: types.ADD_TODO, text }
 }

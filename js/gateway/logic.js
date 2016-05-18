@@ -14,21 +14,31 @@ export function getNetworkCredentials() {
 export function authorizeApplicationOrConfirmObtainedToken(store) {
   store.dispatch(authorizations.willAuthorize())
 
-  function getAuth() {
+  const token = window.localStorage.token
+  let action = (token ? asyncGetAuth(token) : asyncPostAuth())
+  return store.dispatch(action)
+}
+
+export function asyncGetAuth(token) {
+  return function(dispatch) {
     return http.getAuth(token)
       .then((response) => {
           if(response.status == 200) {
-            store.dispatch(authorizations.didAuthorized(true))
+            return dispatch(authorizations.didAuthorized(true))
           }
           if(response.status == 401) {
-            return postAuth()
+            return dispatch(asyncPostAuth())
           }
       })
-      .catch(() => {
-        store.dispatch(authorizations.didAuthorized(undefined))
+      .catch((reason) => {
+        console.debug('asyncGetAuth failed')
+        return dispatch(authorizations.didAuthorized(undefined))
       })
   }
-  function postAuth() {
+}
+
+export function asyncPostAuth() {
+  return function(dispatch) {
     return http.postAuth()
       .then((response) => {
         if(response.status == 200) {
@@ -39,19 +49,17 @@ export function authorizeApplicationOrConfirmObtainedToken(store) {
           window.localStorage.symmetricKey = response.__parsedResponseBody__.symmetricKeys.key
           window.localStorage.symmetricNonce = response.__parsedResponseBody__.symmetricKeys.nonce
 
-          store.dispatch(authorizations.didAuthorized(true))
+          return dispatch(authorizations.didAuthorized(true))
         }
         if(response.status == 401) {
-          store.dispatch(authorizations.didAuthorized(false))
+          return dispatch(authorizations.didAuthorized(false))
         }
       })
-      .catch(() => {
-        store.dispatch(authorizations.didAuthorized(undefined))
+      .catch((reason) => {
+        console.debug('asyncPostAuth failed')
+        return dispatch(authorizations.didAuthorized(undefined))
       })
   }
-
-  const token = window.localStorage.token
-  return (token ? getAuth() : postAuth())
 }
 
 export function getTodosFileOrPutInitialFromApplicationState(store) {
@@ -93,8 +101,15 @@ export function asyncPutFile() {
     return http.putFile(token, key, nonce, payload)
       .then((response) => {
         if(response.status == 200) {
-          return dispatch(persistencies.willPut(true))
+          return dispatch(persistencies.didPut(true))
         }
       })
+  }
+}
+
+export function asyncPostAuthAndGetFile() {
+  return function(dispatch) {
+    return dispatch(asyncPostAuth())
+      .then(() => { return dispatch(asyncGetFile()) })
   }
 }

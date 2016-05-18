@@ -15,10 +15,10 @@
 The main purpose of this app is to provide a complete example of MAID application
 development routine. This app promotes things like:
 
-- [x] React and Redux conveniences.
+- [x] React, Redux and Redux-Thunk conveniences.
 - [x] compile JS and CSS through `electron-compile`.
 - [x] testing through `electron-mocha`. Tests are running in `renderer` process.
-- [x] Fetch API to interface a `safe_launcher` (first step towards Workers API).
+- [x] using Fetch API to interface a `safe_launcher` (ships with mocks in specs).
 - [x] application authorizing with confirmation whether the obtained token is still valid.
 - [x] store todo list into safe network.
 
