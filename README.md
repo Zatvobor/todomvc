@@ -30,7 +30,7 @@ You have to go through `npm install`, `npm test` and finally `npm start`. Tada! 
 
 ### Wait, seriously?
 
-Yeah. Make sure you have a `safe_launcher` (configured with `use-mock-routing` feature).
+Yeah. Make sure you have installed a `safe_launcher` (configured with `use-mock-routing` feature). Here is a link to [Quick start](https://github.com/maidsafe/safe_launcher#quick-start).
 
 ### Support
 
