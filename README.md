@@ -19,8 +19,10 @@ development routine. This app promotes things like:
 - [x] compile JS and CSS through `electron-compile`.
 - [x] testing through `electron-mocha`. Tests are running in `renderer` process.
 - [x] using Fetch API to interface a `safe_launcher` (ships with mocks in specs).
+- [ ] communication to `safe_launcher` over dedicated thread.
 - [x] application authorizing with confirmation whether the obtained token is still valid.
 - [x] store todo list into safe network.
+- [ ] package app into a `asar` archive and release as OSX package (PGP signed).
 
 ### Installation and usage
 
